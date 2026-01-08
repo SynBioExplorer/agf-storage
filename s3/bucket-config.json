@@ -1,0 +1,22 @@
+{
+  "buckets": [
+    {
+      "name": "agf-instrument-data",
+      "region": "ap-southeast-2",
+      "creationDate": "2025-11-25T03:52:37+00:00",
+      "versioning": {
+        "status": "Enabled"
+      },
+      "eventBridgeNotification": {
+        "enabled": true
+      },
+      "description": "Primary bucket for storing instrument metadata (run.json, experiment.json) and raw data files"
+    },
+    {
+      "name": "agf-instrument-data-deployments",
+      "region": "ap-southeast-2",
+      "creationDate": "2025-11-24T02:06:16+00:00",
+      "description": "Deployment artifacts bucket for Lambda function packages"
+    }
+  ]
+}

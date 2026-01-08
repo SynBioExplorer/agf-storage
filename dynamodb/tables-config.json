@@ -1,0 +1,120 @@
+{
+  "region": "ap-southeast-2",
+  "billingMode": "PAY_PER_REQUEST",
+  "tables": [
+    {
+      "tableName": "agf-file-inventory-dev",
+      "description": "Individual file tracking with checksums, sizes, and timestamps",
+      "keySchema": {
+        "partitionKey": {"name": "experiment_id", "type": "S"},
+        "sortKey": {"name": "file_path", "type": "S"}
+      },
+      "globalSecondaryIndexes": [
+        {
+          "indexName": "staff_name-uploaded_at-index",
+          "keySchema": {
+            "partitionKey": {"name": "staff_name", "type": "S"},
+            "sortKey": {"name": "uploaded_at", "type": "N"}
+          },
+          "projection": "ALL"
+        },
+        {
+          "indexName": "run_id-file_path-index",
+          "keySchema": {
+            "partitionKey": {"name": "run_id", "type": "S"},
+            "sortKey": {"name": "file_path", "type": "S"}
+          },
+          "projection": "ALL"
+        },
+        {
+          "indexName": "instrument_id-uploaded_at-index",
+          "keySchema": {
+            "partitionKey": {"name": "instrument_id", "type": "S"},
+            "sortKey": {"name": "uploaded_at", "type": "N"}
+          },
+          "projection": "ALL"
+        }
+      ],
+      "streamSpecification": {
+        "enabled": true,
+        "viewType": "NEW_AND_OLD_IMAGES"
+      },
+      "encryption": {
+        "type": "KMS",
+        "enabled": true
+      },
+      "itemCount": 688
+    },
+    {
+      "tableName": "agf-experiments-dev",
+      "description": "Experiment metadata with summaries and file statistics",
+      "keySchema": {
+        "partitionKey": {"name": "experiment_id", "type": "S"},
+        "sortKey": {"name": "last_updated", "type": "N"}
+      },
+      "globalSecondaryIndexes": [
+        {
+          "indexName": "staff_name-last_updated-index",
+          "keySchema": {
+            "partitionKey": {"name": "staff_name", "type": "S"},
+            "sortKey": {"name": "last_updated", "type": "N"}
+          },
+          "projection": "ALL"
+        },
+        {
+          "indexName": "instrument_id-created_at-index",
+          "keySchema": {
+            "partitionKey": {"name": "instrument_id", "type": "S"},
+            "sortKey": {"name": "created_at", "type": "N"}
+          },
+          "projection": "ALL"
+        }
+      ],
+      "streamSpecification": {
+        "enabled": true,
+        "viewType": "NEW_AND_OLD_IMAGES"
+      },
+      "encryption": {
+        "type": "KMS",
+        "enabled": true
+      },
+      "itemCount": 120
+    },
+    {
+      "tableName": "agf-sync-runs-dev",
+      "description": "Sync operation tracking for batch uploads from instruments",
+      "keySchema": {
+        "partitionKey": {"name": "run_id", "type": "S"},
+        "sortKey": {"name": "instrument_id", "type": "S"}
+      },
+      "globalSecondaryIndexes": [
+        {
+          "indexName": "instrument_id-sync_timestamp-index",
+          "keySchema": {
+            "partitionKey": {"name": "instrument_id", "type": "S"},
+            "sortKey": {"name": "sync_timestamp", "type": "N"}
+          },
+          "projection": "ALL"
+        }
+      ],
+      "encryption": {
+        "type": "KMS",
+        "enabled": true
+      },
+      "itemCount": 60
+    },
+    {
+      "tableName": "agf-instruments-dev",
+      "description": "Static instrument registry with 31 laboratory instruments",
+      "keySchema": {
+        "partitionKey": {"name": "instrument_id", "type": "S"}
+      },
+      "globalSecondaryIndexes": [],
+      "encryption": {
+        "type": "KMS",
+        "enabled": true
+      },
+      "itemCount": 30
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "bucket": "agf-instrument-data",
+  "TransitionDefaultMinimumObjectSize": "all_storage_classes_128K",
+  "Rules": [
+    {
+      "ID": "DeleteOldZips",
+      "Status": "Enabled",
+      "Filter": {
+        "Prefix": "downloads/zips/"
+      },
+      "Expiration": {
+        "Days": 7
+      },
+      "Description": "Automatically delete generated zip files after 7 days to manage storage costs"
+    }
+  ]
+}

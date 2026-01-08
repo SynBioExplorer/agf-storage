@@ -1,0 +1,31 @@
+ID,PC_name,Model,Equipment Item,Equipment Type,Brand
+ANA301_GC-MS,DESKTOP-8FLGVED,GC-2030 GCMS-TQ8050 NX,GC-MS,Gas Chromatography-Mass Spectrometry,Shimadzu
+ANA302_LC-MS,DESKTOP-U1J844A,Shimadzu System LC-MS,LC-MS,Liquid Chromatography-Mass Spectrometry,Shimadzu
+ANA304_HPLC,DESKTOP-7EOH3IC,2-02071,HPLC,High Performance Liquid Chromatography,High Performance Liquid Chromatography
+FLO302_FACS-Melody,CHORUSW10E1809,FACS Melody,FACS Melody,Cell cytometer / sorter (small),BD
+FLO303_FACS-S6,FGAWIN10E1809,FACSymphony S6,Symphony S6,Hooded cytometer / cell sorter,BD
+FLO304_Accuri-C6,FN7QXM2,BD Accuri C6 Plus,Accuri,Flow cytometer,BD
+FLO305_Cytoflex,DESKTOP-U2J6HOR,Cytoflex S,Cytoflex S,Flow cytometer,Beckman Coulter
+FLO306_FACS-A1,MXL20443XZ,FACS Symphony A1,Symphony A1,Flow cytometer,BD
+FLO307_FACS-A5,MXL2491PTR,FACS Symphony A5,Symphony A5,Flow cytometer,BD
+GEL301_ZAG-DNA-Analyzer,AATI-Z7590,ZAG DNA Analyzer ,ZAG,DNA Analyzer,Agilent
+INC202_Odin,BSC-OD100040,Odin,Odin,BioLog,BioLog
+INC307_ambr,AMBR250PRD71VY,Ambr 250 high throughput,Ambr,Bioreactor,Sartorius stedim biotech
+INC317_BioLector,LAPTOP-MVGLP7PRO,BioLector XT,BioLector,Microbioreactor,Beckman Coulter
+PCR301_LightCycler,LCCZC1197B31,LightCycler,Thermal cycler (PCR),PCR,Roche
+PCR302_LightCycler,LCCZC1204BXV,LightCycler,Thermal cycler (PCR),PCR,Roche
+ROB301_OT2,SCI-10459,OT2,Opentron,Liquid Handler,Opentrons
+ROB302_Pixl,MQ-5CD524DBF1,Pixl,PIXL,Microbial colony picker,Singer Instruments
+ROB304_Pixl,MQ-5CD524DBF2,Pixl,PIXL,Microbial colony picker,Singer Instruments
+ROB306_OT2,SCI10458,OT2,Opentron,Liquid Handler,Opentrons
+ROB307_Phenobooth,SPE302,PHENOBOOTH,PHENOBOOTH,Colony counter and analyser,Singer Instruments
+ROB308_cybioFelix,SCI-10091,CyBio FeliX CHOICE,Cybio Felix,Liquid Handler,Analytik jena
+ROB309_iDot,TABLET-D3NUBHDL,I.DOT,I.DOT,Liquid Handler,Dispendix
+ROB310_Echo-525,ECHOCLIENT,Echo 525,Echo 525,Liquid Handler,Beckman Coulter
+ROB311_Mantis,OPERATOR-PC9RHX,MANTIS,Mantis,Liquid dispenser,Mantis Continuos mode + Carousel
+SEQ302_minION,SCI-9641,minION,Nanopore,Nanopore Sequencer,NA
+SPE301_Synergy-H1,AGF-10100,Biotek Synergy H1 SH1M,Biotek Synergy SH1M,Microplate reader,Agilent
+SPE302_Synergy-H1,SPE302,Biotek Synergy H1,Biotek Synergy,Microplate reader,Agilent
+SPE306_LogPhase-600,SCI-10459,LogPhase 600,LogPhase 600,Plate reader,Millenium Science
+SPE307_LogPhase-600,SCI-10457,LogPhase 600,LogPhase 600,Plate reader,Agilent BTK
+SPE308_Synergy-H1,MQ-5CD524DBF0,Synergy H1,Synergy H1,Plate reader,Agilent BTK

@@ -1,0 +1,277 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AGF Data Infrastructure - DynamoDB Tables for File Inventory and Experiment Tracking'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: 'dev'
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Description: Environment name (dev/staging/prod)
+
+Resources:
+  # ============================================================================
+  # TABLE 1: File Inventory (Primary file tracking)
+  # ============================================================================
+  FileInventoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'agf-file-inventory-${EnvironmentName}'
+      BillingMode: PAY_PER_REQUEST  # Auto-scaling, no capacity planning needed
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES  # Enable streams for future processing
+      
+      # Primary Key
+      AttributeDefinitions:
+        - AttributeName: experiment_id
+          AttributeType: S
+        - AttributeName: file_path
+          AttributeType: S
+        - AttributeName: staff_name
+          AttributeType: S
+        - AttributeName: uploaded_at
+          AttributeType: N
+        - AttributeName: run_id
+          AttributeType: S
+        - AttributeName: instrument_id
+          AttributeType: S
+      
+      KeySchema:
+        - AttributeName: experiment_id
+          KeyType: HASH
+        - AttributeName: file_path
+          KeyType: RANGE
+      
+      # GSI 1: Query files by user (for user dashboard)
+      GlobalSecondaryIndexes:
+        - IndexName: staff_name-uploaded_at-index
+          KeySchema:
+            - AttributeName: staff_name
+              KeyType: HASH
+            - AttributeName: uploaded_at
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        
+        # GSI 2: Query files by run (for run-level views)
+        - IndexName: run_id-file_path-index
+          KeySchema:
+            - AttributeName: run_id
+              KeyType: HASH
+            - AttributeName: file_path
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        
+        # GSI 3: Query files by instrument (for instrument utilization)
+        - IndexName: instrument_id-uploaded_at-index
+          KeySchema:
+            - AttributeName: instrument_id
+              KeyType: HASH
+            - AttributeName: uploaded_at
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      
+      Tags:
+        - Key: Project
+          Value: AGF-Data-Infrastructure
+        - Key: Environment
+          Value: !Ref EnvironmentName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # ============================================================================
+  # TABLE 2: Experiments (Experiment metadata summary)
+  # ============================================================================
+  ExperimentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'agf-experiments-${EnvironmentName}'
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      
+      # Primary Key
+      AttributeDefinitions:
+        - AttributeName: experiment_id
+          AttributeType: S
+        - AttributeName: last_updated
+          AttributeType: N
+        - AttributeName: staff_name
+          AttributeType: S
+        - AttributeName: instrument_id
+          AttributeType: S
+        - AttributeName: created_at
+          AttributeType: N
+      
+      KeySchema:
+        - AttributeName: experiment_id
+          KeyType: HASH
+        - AttributeName: last_updated
+          KeyType: RANGE
+      
+      # GSI 1: Query experiments by user (for user dashboard)
+      GlobalSecondaryIndexes:
+        - IndexName: staff_name-last_updated-index
+          KeySchema:
+            - AttributeName: staff_name
+              KeyType: HASH
+            - AttributeName: last_updated
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        
+        # GSI 2: Query experiments by instrument
+        - IndexName: instrument_id-created_at-index
+          KeySchema:
+            - AttributeName: instrument_id
+              KeyType: HASH
+            - AttributeName: created_at
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      
+      Tags:
+        - Key: Project
+          Value: AGF-Data-Infrastructure
+        - Key: Environment
+          Value: !Ref EnvironmentName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # ============================================================================
+  # TABLE 3: Sync Runs (Run tracking for monitoring)
+  # ============================================================================
+  SyncRunsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'agf-sync-runs-${EnvironmentName}'
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      
+      # Primary Key
+      AttributeDefinitions:
+        - AttributeName: run_id
+          AttributeType: S
+        - AttributeName: instrument_id
+          AttributeType: S
+        - AttributeName: sync_timestamp
+          AttributeType: N
+      
+      KeySchema:
+        - AttributeName: run_id
+          KeyType: HASH
+        - AttributeName: instrument_id
+          KeyType: RANGE
+      
+      # GSI 1: Query runs by instrument (for monitoring)
+      GlobalSecondaryIndexes:
+        - IndexName: instrument_id-sync_timestamp-index
+          KeySchema:
+            - AttributeName: instrument_id
+              KeyType: HASH
+            - AttributeName: sync_timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      
+      Tags:
+        - Key: Project
+          Value: AGF-Data-Infrastructure
+        - Key: Environment
+          Value: !Ref EnvironmentName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # ============================================================================
+  # TABLE 4: Instruments (Static instrument registry)
+  # ============================================================================
+  InstrumentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'agf-instruments-${EnvironmentName}'
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      
+      # Primary Key
+      AttributeDefinitions:
+        - AttributeName: instrument_id
+          AttributeType: S
+      
+      KeySchema:
+        - AttributeName: instrument_id
+          KeyType: HASH
+      
+      Tags:
+        - Key: Project
+          Value: AGF-Data-Infrastructure
+        - Key: Environment
+          Value: !Ref EnvironmentName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+Outputs:
+  FileInventoryTableName:
+    Description: DynamoDB table for file inventory
+    Value: !Ref FileInventoryTable
+    Export:
+      Name: !Sub '${AWS::StackName}-FileInventoryTable'
+
+  FileInventoryTableArn:
+    Description: ARN of file inventory table
+    Value: !GetAtt FileInventoryTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-FileInventoryTableArn'
+
+  ExperimentsTableName:
+    Description: DynamoDB table for experiments
+    Value: !Ref ExperimentsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-ExperimentsTable'
+
+  ExperimentsTableArn:
+    Description: ARN of experiments table
+    Value: !GetAtt ExperimentsTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-ExperimentsTableArn'
+
+  SyncRunsTableName:
+    Description: DynamoDB table for sync runs
+    Value: !Ref SyncRunsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-SyncRunsTable'
+
+  SyncRunsTableArn:
+    Description: ARN of sync runs table
+    Value: !GetAtt SyncRunsTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-SyncRunsTableArn'
+
+  InstrumentsTableName:
+    Description: DynamoDB table for instruments
+    Value: !Ref InstrumentsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-InstrumentsTable'
+
+  InstrumentsTableArn:
+    Description: ARN of instruments table
+    Value: !GetAtt InstrumentsTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-InstrumentsTableArn'
