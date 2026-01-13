@@ -12,6 +12,20 @@
         "Days": 7
       },
       "Description": "Automatically delete generated zip files after 7 days to manage storage costs"
+    },
+    {
+      "ID": "TransitionToGlacierAfter2Years",
+      "Status": "Enabled",
+      "Filter": {
+        "Prefix": "raw/"
+      },
+      "Transitions": [
+        {
+          "Days": 730,
+          "StorageClass": "GLACIER"
+        }
+      ],
+      "Description": "Move raw instrument data to Glacier after 2 years for cost optimization"
     }
   ]
 }

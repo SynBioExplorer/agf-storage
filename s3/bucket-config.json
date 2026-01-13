@@ -10,7 +10,28 @@
       "eventBridgeNotification": {
         "enabled": true
       },
+      "logging": {
+        "targetBucket": "agf-access-logs",
+        "targetPrefix": "agf-instrument-data/",
+        "description": "Access logs stored for 90 days for audit purposes"
+      },
       "description": "Primary bucket for storing instrument metadata (run.json, experiment.json) and raw data files"
+    },
+    {
+      "name": "agf-access-logs",
+      "region": "ap-southeast-2",
+      "description": "S3 access logs bucket with 90-day retention",
+      "lifecycle": {
+        "rules": [
+          {
+            "ID": "DeleteLogsAfter90Days",
+            "Status": "Enabled",
+            "Expiration": {
+              "Days": 90
+            }
+          }
+        ]
+      }
     },
     {
       "name": "agf-instrument-data-deployments",
