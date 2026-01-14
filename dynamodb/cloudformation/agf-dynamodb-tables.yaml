@@ -171,7 +171,9 @@ Resources:
           AttributeType: S
         - AttributeName: sync_timestamp
           AttributeType: N
-      
+        - AttributeName: gsi_pk
+          AttributeType: S
+
       KeySchema:
         - AttributeName: run_id
           KeyType: HASH
@@ -188,7 +190,18 @@ Resources:
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
-      
+
+        # GSI 2: Query recent runs across all instruments (for dashboard)
+        # Uses fixed partition key gsi_pk="ALL" to enable cross-instrument queries
+        - IndexName: all-sync_timestamp-index
+          KeySchema:
+            - AttributeName: gsi_pk
+              KeyType: HASH
+            - AttributeName: sync_timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
       Tags:
         - Key: Project
           Value: AGF-Data-Infrastructure
