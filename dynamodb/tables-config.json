@@ -95,6 +95,15 @@
             "sortKey": {"name": "sync_timestamp", "type": "N"}
           },
           "projection": "ALL"
+        },
+        {
+          "indexName": "all-sync_timestamp-index",
+          "keySchema": {
+            "partitionKey": {"name": "gsi_pk", "type": "S"},
+            "sortKey": {"name": "sync_timestamp", "type": "N"}
+          },
+          "projection": "ALL",
+          "description": "Global index for dashboard queries - all sync runs sorted by timestamp"
         }
       ],
       "encryption": {
